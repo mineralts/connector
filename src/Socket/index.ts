@@ -12,7 +12,7 @@ import Heartbeat from './HearthBeat'
 import { Observable, Subscriber } from 'rxjs'
 import Connector from '../Connector'
 import WebSocket, { Data } from 'ws'
-import { JSONObject, Opcode } from '../types'
+import { JSONObject, Opcode, WebsocketPayload } from '../types'
 
 export default class Socket {
   private websocket!: WebSocket
@@ -55,34 +55,23 @@ export default class Socket {
       this.connector.application.logger.fatal(error.message)
     })
 
-    this.websocket.on('close', () => {
-      this.connector.application.logger.error('Socket channel is down')
+    this.websocket.on('close', (a, b) => {
+      this.connector.application.logger.fatal(`${a} : ${b.toString()}`)
       this.heartbeat.shutdown()
     })
-
-    this.dispatch()
   }
 
-  private dispatch () {
-    this.reactor.subscribe(async (payload: any) => {
+  public dispatch (callback: (payload: WebsocketPayload) => JSONObject<any>) {
+    this.reactor.subscribe((payload: any) => {
       this.heartbeat.watchSession(payload.d?.session_id)
 
       if (payload.op === Opcode.HELLO) {
         this.heartbeat.beat(payload.d.heartbeat_interval)
       }
 
-      // if (payload.t) {
-      //   const packetEvents = this.connector.application.fold.packets.get(payload.t)
-      //   if (!packetEvents) {
-      //     return
-      //   }
-
-      // await Promise.all(
-      //   packetEvents.map(async (packet: BasePacket) => (
-      //     packet?.handle(this.socket.client, payload.d)
-      //   ))
-      // )
-    // }
+      if (payload.t) {
+        callback(payload)
+      }
     })
   }
 
