@@ -7,3 +7,6 @@
  * file that was distributed with this source code.
  *
  */
+
+import Connector from './Connector'
+export default Connector
