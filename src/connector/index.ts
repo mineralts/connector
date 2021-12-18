@@ -9,8 +9,8 @@
  */
 
 
-import Socket from '../Socket'
-import Http from '../Http'
+import Socket from '../socket'
+import Http from '../http'
 import Logger from '@mineralts/logger'
 
 export default class Connector {

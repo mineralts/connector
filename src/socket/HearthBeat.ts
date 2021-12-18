@@ -9,6 +9,7 @@
  */
 
 import Socket from './index'
+import { Opcode } from '../types'
 
 export default class Heartbeat {
   private scheduler: any
@@ -16,18 +17,18 @@ export default class Heartbeat {
   }
 
   public watchSession (sessionId: string) {
-    // if (sessionId) {
-    //   this.socket.websocket.client.sessionId = sessionId
-    // }
+    if (sessionId) {
+      this.socket.sessionId = sessionId
+    }
   }
 
   public beat (interval: number) {
     this.scheduler = setInterval(() => {
-      // const request = this.socket.request(Opcode.HEARTBEAT, {
-      //   session_id: this.socket.websocket.client.sessionId
-      // })
-      //
-      // this.socket.websocket.send(request)
+      const request = this.socket.request(Opcode.HEARTBEAT, {
+        session_id: this.socket.sessionId
+      })
+
+      this.socket.websocket.send(request)
       this.socket.connector.application.logger
       this.socket.connector.application.logger.info('Sending a heartbeat')
     }, interval)

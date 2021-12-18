@@ -10,14 +10,16 @@
 
 import Heartbeat from './HearthBeat'
 import { Observable, Subscriber } from 'rxjs'
-import Connector from '../Connector'
+import Connector from '../connector'
 import WebSocket, { Data } from 'ws'
 import { JSONObject, Opcode, WebsocketPayload } from '../types'
+import Rpc from '../errors/Rpc'
 
 export default class Socket {
-  private websocket!: WebSocket
+  public websocket!: WebSocket
   private reactor!: Observable<any>
   private heartbeat: Heartbeat
+  public sessionId!: string
 
   constructor (public connector: Connector) {
     this.heartbeat = new Heartbeat(this)
@@ -37,15 +39,13 @@ export default class Socket {
     })
 
     this.websocket.on('open', () => {
-      this.connector.application.logger.info('Socket opened')
+      this.connector.application.logger.info('socket opened')
       const request = this.request(Opcode.IDENTIFY, {
         token: this.connector.application.token,
-        properties: {
-          $os: process.arch,
-        },
+        properties: { $os: process.arch },
         compress: false,
         large_threshold: 250,
-        intents: []
+        intents: 32767
       })
 
       this.websocket.send(request)
@@ -55,8 +55,8 @@ export default class Socket {
       this.connector.application.logger.fatal(error.message)
     })
 
-    this.websocket.on('close', (a, b) => {
-      this.connector.application.logger.fatal(`${a} : ${b.toString()}`)
+    this.websocket.on('close', (code) => {
+      this.connector.application.logger.fatal(`${code} : ${Rpc[code]}`)
       this.heartbeat.shutdown()
     })
   }
@@ -67,10 +67,6 @@ export default class Socket {
 
       if (payload.op === Opcode.HELLO) {
         this.heartbeat.beat(payload.d.heartbeat_interval)
-      }
-
-      if (payload.t) {
-        callback(payload)
       }
     })
   }
