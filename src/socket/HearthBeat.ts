@@ -29,7 +29,6 @@ export default class Heartbeat {
       })
 
       this.socket.websocket.send(request)
-      this.socket.connector.application.logger
       this.socket.connector.application.logger.info('Sending a heartbeat')
     }, interval)
   }
