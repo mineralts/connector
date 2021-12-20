@@ -27,9 +27,9 @@ export default class Socket {
 
   public async connect<T = JSONObject<any>> (): Promise<void> {
     const version = '/v9/gateway/bot'
-    const data = await this.connector.http.get(version)
+    const endpoint = await this.getWebsocketEndpoint(version)
 
-    this.websocket = new WebSocket(data.url + version)
+    this.websocket = new WebSocket(endpoint?.url + version)
 
     this.reactor = new Observable<T>((observer: Subscriber<T>) => {
       this.websocket.on('message', async (data: Data) => {
@@ -61,13 +61,19 @@ export default class Socket {
     })
   }
 
-  public dispatch (callback: (payload: WebsocketPayload) => JSONObject<any>) {
+  private async getWebsocketEndpoint (version: string): Promise<{ url: string } | undefined> {
+    return this.connector.http.get(version)
+  }
+
+  public dispatch (callback: (payload: WebsocketPayload) => any) {
     this.reactor.subscribe((payload: any) => {
       this.heartbeat.watchSession(payload.d?.session_id)
 
       if (payload.op === Opcode.HELLO) {
         this.heartbeat.beat(payload.d.heartbeat_interval)
       }
+
+      callback(payload)
     })
   }
 
