@@ -11,13 +11,13 @@
 
 import Socket from '../socket'
 import Http from '../http'
-import Logger from '@mineralts/logger'
+import Application from '@mineralts/application'
 
 export default class Connector {
   public socket: Socket
   public http: Http
 
-  constructor (public application: { logger: Logger, token: string }) {
+  constructor (public application: Application) {
     this.socket = new Socket(this)
     this.http = new Http()
 
