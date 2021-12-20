@@ -10,6 +10,7 @@
 
 import axios, { Axios, AxiosRequestConfig } from 'axios'
 import { JSONObject } from '../types'
+import HttpError from '../errors/HttpError'
 
 export default class Http {
   private axios: Axios = axios.create({
@@ -17,8 +18,12 @@ export default class Http {
   })
 
   public async get (url: string, options?: AxiosRequestConfig) {
-    const { data } = await this.axios.get(url, options)
-    return data
+    try {
+      const { data } = await this.axios.get(url, options)
+      return data
+    } catch (error: any) {
+      throw new HttpError(error.response.data.message)
+    }
   }
 
   /**

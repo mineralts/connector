@@ -15,9 +15,15 @@ import Logger from '@mineralts/logger'
 
 export default class Connector {
   public socket: Socket
-  public http: Http = new Http()
+  public http: Http
 
   constructor (public application: { logger: Logger, token: string }) {
     this.socket = new Socket(this)
+    this.http = new Http(this.application.logger)
+
+    if (!this.application.token) {
+      this.application.logger.fatal('No token has been defined.')
+      process.exit(1)
+    }
   }
 }
