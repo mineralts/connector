@@ -25,6 +25,7 @@ export enum Opcode {
 export type JSONObject<T> = { [K: string]: T }
 
 export type WebsocketPayload = {
-  t: Opcode,
+  op: Opcode
+  t: string,
   d: JSONObject<any>
 }
