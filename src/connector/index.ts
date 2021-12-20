@@ -19,7 +19,7 @@ export default class Connector {
 
   constructor (public application: { logger: Logger, token: string }) {
     this.socket = new Socket(this)
-    this.http = new Http(this.application.logger)
+    this.http = new Http()
 
     if (!this.application.token) {
       this.application.logger.fatal('No token has been defined.')
