@@ -8,5 +8,5 @@
  *
  */
 
-import Connector from './connector'
+import Connector from './src/connector'
 export default Connector
