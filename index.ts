@@ -9,4 +9,9 @@
  */
 
 import Connector from './src/connector'
-export default Connector
+import Socket from './src/socket'
+
+export {
+  Connector,
+  Socket
+}
