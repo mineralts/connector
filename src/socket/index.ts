@@ -39,13 +39,13 @@ export default class Socket {
     })
 
     this.websocket.on('open', () => {
-      this.connector.application.logger.info('socket opened')
+      this.connector.application.logger.info('Socket opened')
       const request = this.request(Opcode.IDENTIFY, {
         token: this.connector.application.token,
         properties: { $os: process.arch },
         compress: false,
         large_threshold: 250,
-        intents: 32767
+        intents: this.connector.application.intents
       })
 
       this.websocket.send(request)
