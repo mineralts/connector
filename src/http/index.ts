@@ -26,6 +26,24 @@ export default class Http {
     }
   }
 
+  public async post (url: string, payload, options?: AxiosRequestConfig) {
+    try {
+      const { data } = await this.axios.post(url, options)
+      return data
+    } catch (error: any) {
+      throw new HttpError(error.response.data.message)
+    }
+  }
+
+  public async patch (url: string, payload, options?: AxiosRequestConfig) {
+    try {
+      const { data } = await this.axios.patch(url, options)
+      return data
+    } catch (error: any) {
+      throw new HttpError(error.response.data.message)
+    }
+  }
+
   /**
    * Define default axios headers
    * @param headers
