@@ -11,6 +11,7 @@
 import axios, { Axios, AxiosRequestConfig } from 'axios'
 import { JSONObject } from '../types'
 import HttpError from '../errors/HttpError'
+import { RateLimitException } from '@mineralts/core'
 
 export default class Http {
   private axios: Axios = axios.create({
@@ -28,7 +29,7 @@ export default class Http {
 
   public async post (url: string, payload, options?: AxiosRequestConfig) {
     try {
-      const { data } = await this.axios.post(url, options)
+      const { data } = await this.axios.post(url, payload, options)
       return data
     } catch (error: any) {
       throw new HttpError(error.response.data.message)
@@ -37,10 +38,12 @@ export default class Http {
 
   public async patch (url: string, payload, options?: AxiosRequestConfig) {
     try {
-      const { data } = await this.axios.patch(url, options)
+      const { data } = await this.axios.patch(url, payload, options)
       return data
     } catch (error: any) {
-      throw new HttpError(error.response.data.message)
+      if (error.response.status === 429) {
+        new RateLimitException(error.response.data.retry_after)
+      }
     }
   }
 
