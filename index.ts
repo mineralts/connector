@@ -10,8 +10,10 @@
 
 import Connector from './src/connector'
 import Socket from './src/socket'
+import Http from './src/http'
 
 export {
   Connector,
-  Socket
+  Socket,
+  Http
 }
