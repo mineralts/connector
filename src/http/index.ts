@@ -47,6 +47,17 @@ export default class Http {
     }
   }
 
+  public async delete (url: string, options?: AxiosRequestConfig) {
+    try {
+      const { data } = await this.axios.delete(url, options)
+      return data
+    } catch (error: any) {
+      if (error.response.status === 429) {
+        new RateLimitException(error.response.data.retry_after)
+      }
+    }
+  }
+
   /**
    * Define default axios headers
    * @param headers
