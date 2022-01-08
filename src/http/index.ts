@@ -67,4 +67,10 @@ export default class Http {
       this.axios.defaults.headers.common[key] = value
     })
   }
+
+  public resetHeaders (...headers: string[]) {
+    Object.entries(headers).forEach(([key]: [string, string]) => {
+      delete this.axios.defaults.headers.common[key]
+    })
+  }
 }
