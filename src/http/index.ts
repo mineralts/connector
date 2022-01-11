@@ -32,6 +32,7 @@ export default class Http {
       const { data } = await this.axios.post(url, payload, options)
       return data
     } catch (error: any) {
+      console.log(error.response.data)
       throw new HttpError(error.response.data.message)
     }
   }
