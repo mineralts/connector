@@ -39,7 +39,10 @@ export default class Socket {
     })
 
     this.websocket.on('open', () => {
-      this.connector.application.logger.info('Socket opened')
+      if (this.connector.application.debug) {
+        this.connector.application.logger.info('Socket opened')
+      }
+
       const request = this.request(Opcode.IDENTIFY, {
         token: this.connector.application.token,
         properties: { $os: process.arch },
