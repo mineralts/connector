@@ -44,7 +44,7 @@ export default class Socket {
       }
 
       const request = this.request(Opcode.IDENTIFY, {
-        token: this.connector.application.token,
+        token: this.connector.application.environment.cache.get('TOKEN'),
         properties: { $os: process.arch },
         compress: false,
         large_threshold: 250,
