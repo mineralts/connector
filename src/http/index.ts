@@ -10,7 +10,6 @@
 
 import axios, { Axios, AxiosRequestConfig } from 'axios'
 import { ApiErrors, JSONObject } from '../types'
-import HttpError from '../errors/HttpError'
 import RateLimitException from '../exceptions/RateLimitException'
 import ApiError from '../errors/ApiError'
 
@@ -30,7 +29,7 @@ export default class Http {
         }
       }
 
-      throw new HttpError(error.response.data.message)
+      return undefined
     }
   }
 
@@ -45,7 +44,7 @@ export default class Http {
         }
       }
 
-      throw new HttpError(error.response.data.message)
+      return undefined
     }
   }
 
@@ -63,6 +62,8 @@ export default class Http {
       if (error.response.status === 429) {
         new RateLimitException(error.response.data.retry_after)
       }
+
+      return undefined
     }
   }
 
@@ -80,6 +81,8 @@ export default class Http {
       if (error.response.status === 429) {
         new RateLimitException(error.response.data.retry_after)
       }
+
+      return undefined
     }
   }
 
@@ -97,6 +100,8 @@ export default class Http {
       if (error.response.status === 429) {
         new RateLimitException(error.response.data.retry_after)
       }
+
+      return undefined
     }
   }
 
