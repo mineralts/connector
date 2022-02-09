@@ -11,13 +11,12 @@
 
 import Socket from '../socket'
 import Http from '../http'
-import Application from '@mineralts/application'
 
 export default class Connector {
   public socket: Socket
   public http: Http
 
-  constructor (public application: Application) {
+  constructor (public application: any) {
     this.socket = new Socket(this)
     this.http = new Http()
 

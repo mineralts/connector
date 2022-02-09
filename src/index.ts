@@ -1,5 +1,5 @@
 /*
- * @mineralts/index.ts
+ * packages/index.ts
  *
  * (c) Parmantier Baptiste
  *
@@ -8,9 +8,9 @@
  *
  */
 
-import Connector from './src/connector'
-import Socket from './src/socket'
-import Http from './src/http'
+import Connector from './connector'
+import Socket from './socket'
+import Http from './http'
 
 export {
   Connector,

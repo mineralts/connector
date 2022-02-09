@@ -9,9 +9,10 @@
  */
 
 import axios, { Axios, AxiosRequestConfig } from 'axios'
-import { JSONObject } from '../types'
+import { ApiErrors, JSONObject } from '../types'
 import HttpError from '../errors/HttpError'
-import { RateLimitException } from '@mineralts/core'
+import RateLimitException from '../exceptions/RateLimitException'
+import ApiError from '../errors/ApiError'
 
 export default class Http {
   private axios: Axios = axios.create({
@@ -23,6 +24,12 @@ export default class Http {
       const { data } = await this.axios.get(url, options)
       return data
     } catch (error: any) {
+      if (error.response.status === 400) {
+        if (Object.values(ApiErrors).includes(error.response.data.code)) {
+          new ApiError(error.response)
+        }
+      }
+
       throw new HttpError(error.response.data.message)
     }
   }
@@ -32,8 +39,30 @@ export default class Http {
       const { data } = await this.axios.post(url, payload, options)
       return data
     } catch (error: any) {
-      console.log(error.response.data)
+      if (error.response.status === 400) {
+        if (Object.values(ApiErrors).includes(error.response.data.code)) {
+          new ApiError(error.response)
+        }
+      }
+
       throw new HttpError(error.response.data.message)
+    }
+  }
+
+  public async put (url: string, payload, options?: AxiosRequestConfig) {
+    try {
+      const { data } = await this.axios.put(url, payload, options)
+      return data
+    } catch (error: any) {
+      if (error.response.status === 400) {
+        if (Object.values(ApiErrors).includes(error.response.data.code)) {
+          new ApiError(error.response)
+        }
+      }
+
+      if (error.response.status === 429) {
+        new RateLimitException(error.response.data.retry_after)
+      }
     }
   }
 
@@ -42,6 +71,12 @@ export default class Http {
       const { data } = await this.axios.patch(url, payload, options)
       return data
     } catch (error: any) {
+      if (error.response.status === 400) {
+        if (Object.values(ApiErrors).includes(error.response.data.code)) {
+          new ApiError(error.response)
+        }
+      }
+
       if (error.response.status === 429) {
         new RateLimitException(error.response.data.retry_after)
       }
@@ -53,6 +88,12 @@ export default class Http {
       const { data } = await this.axios.delete(url, options)
       return data
     } catch (error: any) {
+      if (error.response.status === 400) {
+        if (Object.values(ApiErrors).includes(error.response.data.code)) {
+          new ApiError(error.response)
+        }
+      }
+
       if (error.response.status === 429) {
         new RateLimitException(error.response.data.retry_after)
       }

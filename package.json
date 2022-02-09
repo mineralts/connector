@@ -1,12 +1,12 @@
 {
-  "name": "@mineralts/connector",
-  "version": "1.0.0",
+  "name": "@mineralts/connector-preview",
+  "version": "1.1.5",
   "main": "build/index.js",
-  "repository": "git@github.com:Mineral-ts/core.git",
+  "repository": "git@github.com:Mineral-ts/connector.git",
   "author": "leadcodedev <baptiste.parmantier.pro@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "dev": "esbuild-dev index.ts --supervise --commands --watch",
+    "dev": "esbuild-dev src/index.ts --supervise --commands --watch",
     "build": "tsc",
     "test": "ts-jest",
     "lint": "eslint \"{src,test}/**/*.ts\"",

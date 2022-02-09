@@ -1,0 +1,9 @@
+import Logger from '@mineralts/logger'
+
+export default class ApiError {
+  constructor (response) {
+    const logger = new Logger()
+    logger.fatal(`${response.status} ${response.statusText} : ${response.data.message}`)
+    process.exit(1)
+  }
+}
