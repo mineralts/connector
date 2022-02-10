@@ -28,6 +28,7 @@ export type WebsocketPayload = {
   op: Opcode
   t: string,
   d: JSONObject<any>
+  s: number
 }
 
 export enum ApiErrors {

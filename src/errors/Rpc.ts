@@ -9,7 +9,15 @@
  */
 
 export default {
-  1000: 'An unknown error occurred.',
+  1000: 'The connection was terminated normally.',
+  1001: 'An error has occurred on the server or the browser leaves the page that opened the connection.',
+  1002: 'The other side of the connection terminates the connection due to a protocol error.',
+  1003: 'The connection is terminated because the server has received data of a type it cannot accept.',
+  1005: 'No code is given although a code was expected.',
+  1006: 'The connection was terminated abnormally.',
+  1007: 'A message containing inconsistent data has been received.',
+  1008: 'A message is received that does not respect the server policy.',
+  1009: 'The data received is too large',
   4000: 'You sent an invalid payload.',
   4002: 'Invalid command name specified.',
   4003: 'Invalid guild ID specified.',

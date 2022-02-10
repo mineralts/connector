@@ -29,7 +29,12 @@ export default class Socket {
     const version = '/v9/gateway/bot'
     const endpoint = await this.getWebsocketEndpoint(version)
 
-    this.websocket = new WebSocket(endpoint?.url + version)
+    if (!endpoint) {
+      this.connector.application.logger.fatal('The websocket endpoint was not found.')
+      process.exit(1)
+    }
+
+    this.websocket = new WebSocket(endpoint.url + version)
 
     this.reactor = new Observable<T>((observer: Subscriber<T>) => {
       this.websocket.on('message', async (data: Data) => {
@@ -38,6 +43,23 @@ export default class Socket {
       })
     })
 
+    this.websocket.on('error', (error: Error) => {
+      this.connector.application.logger.fatal(error.message)
+      this.reconnect()
+    })
+
+    this.websocket.on('close', async (code: number) => {
+      this.connector.application.logger.fatal(`${code} : ${Rpc[code]}`)
+      this.heartbeat.shutdown()
+
+      console.log('code', code)
+      if ([1000, 1001, 1002, 1003, 1005, 1006, 1007, 1008, 1009].includes(code)) {
+        await this.reconnect()
+      }
+    })
+  }
+
+  public authenticate () {
     this.websocket.on('open', () => {
       if (this.connector.application.debug) {
         this.connector.application.logger.info('Socket opened')
@@ -53,15 +75,30 @@ export default class Socket {
 
       this.websocket.send(request)
     })
+  }
 
-    this.websocket.on('error', (error: Error) => {
-      this.connector.application.logger.fatal(error.message)
+  public async reconnect () {
+    if (this.connector.application.debug) {
+      this.connector.application.logger.info('Attempting to reconnect')
+    }
+
+    const reconnectRequest = this.request(Opcode.RESUME, {
+      token: this.connector.application.environment.cache.get('TOKEN'),
+      session_id: this.sessionId,
+      seq: this.connector.application.apiSequence
     })
 
-    this.websocket.on('close', (code) => {
-      this.connector.application.logger.fatal(`${code} : ${Rpc[code]}`)
-      this.heartbeat.shutdown()
+    this.close()
+    await this.connect()
+
+    this.websocket.on('open', () => {
+      this.websocket.send(reconnectRequest)
     })
+  }
+
+  public close () {
+    this.websocket.close(200)
+    this.heartbeat.shutdown()
   }
 
   private async getWebsocketEndpoint (version: string): Promise<{ url: string } | undefined> {
