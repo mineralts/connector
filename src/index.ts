@@ -11,9 +11,11 @@
 import Connector from './connector'
 import Socket from './socket'
 import Http from './http'
+import { WebsocketPayload } from './types'
 
 export {
   Connector,
   Socket,
-  Http
+  Http,
+  WebsocketPayload,
 }

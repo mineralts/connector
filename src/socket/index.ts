@@ -49,13 +49,13 @@ export default class Socket {
     })
 
     this.websocket.on('close', async (code: number) => {
-      this.connector.application.logger.fatal(`${code} : ${Gateway[code]}`)
+      this.connector.application.logger.fatal(`${code} : ${Gateway[code] || 'Unknown error.'}`)
       this.heartbeat.shutdown()
-
-      console.log('code', code)
-      if ([1000, 1001, 1002, 1003, 1005, 1006, 1007, 1008, 1009].includes(code)) {
-        await this.reconnect()
-      }
+      //
+      // console.log('code', code)
+      // if ([1000, 1001, 1002, 1003, 1005, 1006, 1007, 1008, 1009].includes(code)) {
+      //   await this.reconnect()
+      // }
     })
   }
 
