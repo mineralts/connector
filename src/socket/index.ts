@@ -13,7 +13,7 @@ import { Observable, Subscriber } from 'rxjs'
 import Connector from '../connector'
 import WebSocket, { Data } from 'ws'
 import { JSONObject, Opcode, WebsocketPayload } from '../types'
-import Rpc from '../errors/Rpc'
+import { Gateway } from '../errors/Errors'
 
 export default class Socket {
   public websocket!: WebSocket
@@ -49,7 +49,7 @@ export default class Socket {
     })
 
     this.websocket.on('close', async (code: number) => {
-      this.connector.application.logger.fatal(`${code} : ${Rpc[code]}`)
+      this.connector.application.logger.fatal(`${code} : ${Gateway[code]}`)
       this.heartbeat.shutdown()
 
       console.log('code', code)
@@ -82,18 +82,19 @@ export default class Socket {
       this.connector.application.logger.info('Attempting to reconnect')
     }
 
-    const reconnectRequest = this.request(Opcode.RESUME, {
-      token: this.connector.application.environment.cache.get('TOKEN'),
-      session_id: this.sessionId,
-      seq: this.connector.application.apiSequence
-    })
+    // const reconnectRequest = this.request(Opcode.RESUME, {
+    //   token: this.connector.application.environment.cache.get('TOKEN'),
+    //   session_id: this.sessionId,
+    //   seq: this.connector.application.apiSequence
+    // })
 
     this.close()
     await this.connect()
+    await this.authenticate()
 
-    this.websocket.on('open', () => {
-      this.websocket.send(reconnectRequest)
-    })
+    // this.websocket.on('open', () => {
+    //   this.websocket.send(reconnectRequest)
+    // })
   }
 
   public close () {
