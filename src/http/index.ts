@@ -1,5 +1,5 @@
 /*
- * packages/index.ts
+ * packages/connector.test.ts
  *
  * (c) Parmantier Baptiste
  *

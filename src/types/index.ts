@@ -1,5 +1,5 @@
 /*
- * @mineralts/index.ts
+ * @mineralts/connector.test.ts
  *
  * (c) Parmantier Baptiste
  *

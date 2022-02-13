@@ -1,5 +1,5 @@
 /*
- * @mineralts/index.ts
+ * @mineralts/connector.test.ts
  *
  * (c) Parmantier Baptiste
  *
@@ -37,7 +37,7 @@ export default class Socket {
     this.websocket = new WebSocket(endpoint.url + version)
 
     this.reactor = new Observable<T>((observer: Subscriber<T>) => {
-      this.websocket.on('message', async (data: Data) => {
+      this.websocket.on('message', (data: Data) => {
         const payload: T = JSON.parse(data.toString())
         observer.next(payload)
       })

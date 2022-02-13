@@ -8,9 +8,10 @@
   "scripts": {
     "dev": "esbuild-dev src/index.ts --supervise --commands --watch",
     "build": "tsc",
-    "test": "ts-jest",
     "lint": "eslint \"{src,test}/**/*.ts\"",
-    "lint:fix": "npm run lint -- --fix"
+    "lint:fix": "npm run lint -- --fix",
+    "test": "vitest",
+    "coverage": "vitest run --coverage"
   },
   "dependencies": {
     "@mineralts/logger": "^1.0.2",
@@ -24,6 +25,7 @@
     "rxjs": "^7.4.0",
     "typescript": "^4.4.4",
     "uuid": "^8.3.2",
+    "vitest": "^0.3.4",
     "ws": "^8.2.0"
   },
   "devDependencies": {
