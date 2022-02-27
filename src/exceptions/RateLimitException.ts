@@ -8,11 +8,12 @@
  *
  */
 
-import Logger from '@mineralts/logger'
+import { EventEmitter } from 'events'
+import { DateTime } from 'luxon'
 
-export default class RateLimitException {
-  constructor (duration: number) {
-    const logger = new Logger()
-    logger.warn(`You have been rate limit by the discord api, please try again in ${(duration / 1000).toFixed()} seconds.`)
+export default class RateLimitException extends EventEmitter {
+  constructor (emitter, url: string, method: string, global: boolean, duration: number) {
+    super()
+    emitter.emit('rateLimit', { global, url, method, retryAfter: DateTime.now().plus({ millisecond: duration }) })
   }
 }

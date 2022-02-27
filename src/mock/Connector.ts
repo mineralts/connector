@@ -1,9 +1,14 @@
 import Application from './Application'
 import { expect } from 'vitest'
 import Connector from '../connector'
+import { EventEmitter } from 'events'
+
+class Emitter extends EventEmitter {
+
+}
 
 export function createConnectorWithToken () {
-  const connector = new Connector(Application)
+  const connector = new Connector(Application, Emitter)
 
   const token = connector.application.environment.cache.get('TOKEN')
 

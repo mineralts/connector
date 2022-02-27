@@ -1,5 +1,8 @@
 import Logger from '@mineralts/logger'
 import Http from '../http'
+import { EventEmitter } from 'events'
+
+class Emitter extends EventEmitter {}
 
 export default ({
   appRoot: 'E:\\WindowsData\\Bureau\\Mineral\\packages\\test',
@@ -9,7 +12,7 @@ export default ({
       .set('DEBUG', true)
   },
   logger: new Logger(),
-  request: new Http(),
+  request: new Http(Emitter),
   apiSequence: 2,
   appName: 'MyApp',
   version: '1.0.0',

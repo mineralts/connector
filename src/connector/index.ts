@@ -16,9 +16,9 @@ export default class Connector {
   public socket: Socket
   public http: Http
 
-  constructor (public application: any) {
+  constructor (public application: any, public eventEmitter: any) {
     this.socket = new Socket(this)
-    this.http = new Http()
+    this.http = new Http(eventEmitter)
 
     if (!this.application.environment.cache.get('TOKEN')) {
       this.application.logger.fatal('No token has been defined.')
